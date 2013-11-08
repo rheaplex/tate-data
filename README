@@ -1,0 +1,15 @@
+A simple set of scripts to help explore Tate's collection dataset.
+
+* Licensing
+
+Code is GPLv3+, data is CC0.
+
+* Prerequisites
+
+This project requires node.js and the node "glob" library.
+
+npm install glob
+
+It also requires the tate collection git project linked into this folder as "collection".
+
+ln -s ../../path/to/collection
