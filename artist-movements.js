@@ -1,23 +1,33 @@
-// npm install glob
-// node extract-artist-movements.js > artist-movements.txt
+// Copyright 2013 Rob Myers
+// License: GNU General Public License Version 3 or later
 
-var fs = require("fs");
-var glob = require("glob");
-var path = require("path");
+var csv = require("csv");
+var MongoClient = require('mongodb').MongoClient;
 
-console.log("artist.id\tartist.fc\tmovement.era.id\tmovement.era.name\tmovement.id\tmovement.name");
+var columns = ["artist.id", "artist.fc", "movement.era.id",
+               "movement.era.name", "movement.id", "movement.name"];
 
-glob("collection/artists/**/*.json", function (err, files) {
-  if(! err) {
-    files.forEach(function(file) {
-      var json = fs.readFileSync(file).toString()
-      var artist = JSON.parse(json);
-      for (var i = 0; i < artist.movements.length; i++) {
-        var movement = artist.movements[i];
-        console.log([artist.id, artist.fc,
-                    movement.era.id, movement.era.name,
-                    movement.id, movement.name].join("\t"));
-      }
+MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
+  if(err) { throw err; }
+  var rows = [];
+  db.collection('artists').find().each(function(err, artist) {
+    if(err) { throw err; }
+    if(artist === null) {
+      db.close();
+      csv().from.array(rows).to.stream(process.stdout,
+                                       {end: false,
+                                        columns: columns});
+      return;
+    }
+    // Births and deaths can have locations but not dates
+    var birthDate = ("birth" in artist && "time" in artist.birth) ? 
+        artist.birth.time.startYear : undefined;
+    var deathDate = ("death" in artist && "time" in artist.death) ? 
+        artist.death.time.startYear : undefined;
+    artist.movements.forEach(function(movement) {
+      rows.push([artist.id, artist.fc,
+                 movement.era.id, movement.era.name,
+                 movement.id, movement.name]);
     });
-  }
+  });
 });

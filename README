@@ -6,10 +6,40 @@ Code is GPLv3+, data is CC0.
 
 * Prerequisites
 
-This project requires node.js and the node "glob" library.
+This project requires mongodb, node.js and the node "mongodb" and "csv libraries.
 
-npm install glob
+npm install mongodb
+npm install csv
 
-It also requires the tate collection git project linked into this folder as "collection".
+* Importing The Tate Collection Data Into MongoDB
+
+Check out the Tate collection git project:
+
+https://github.com/tategallery/collection
+
+either directly into this folder, or elsewhere and link it in as "collection":
 
 ln -s ../../path/to/collection
+
+Git will ignore it.
+
+To import the records into MongoDB you have to feed records in one per line.
+Like this:
+
+find collection/artists -name *.json -exec perl -p -e 's/\n/ /' '{}' \; -exec echo \; | mongoimport --db tate --collection artists --stopOnError --drop
+find collection/artworks -name *.json -exec perl -p -e 's/\n/ /' '{}' \; -exec echo \; | mongoimport --db tate --collection artworks --stopOnError --drop
+
+Note that this will delete any existing data in these collections.
+
+* Usage
+
+Install the prerequisites, Import the Tate data into MongoDB, then type:
+
+make
+
+This will generate any csv files that don't already exist.
+
+If you need to remake them after updating the MongoDB data, type:
+
+make clean
+make

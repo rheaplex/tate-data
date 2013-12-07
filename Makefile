@@ -1,12 +1,12 @@
 .PHONY: all clean
 
 SCRIPTS = $(wildcard *.js)
-TXTS = $(patsubst %.js,%.txt,$(SCRIPTS))
+CSVS = $(patsubst %.js,%.csv,$(SCRIPTS))
 
-all: $(TXTS)
+all: $(CSVS)
 
 clean:
-	rm -fv $(TXTS)
+	rm -fv $(CSVS)
 
-%.txt: %.js
+%.csv: %.js
 	node $^ > $@

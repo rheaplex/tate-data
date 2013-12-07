@@ -1,23 +1,32 @@
-// npm install glob
-// node extract-artwork-movements.js > artwork-movements.txt
+// Copyright 2013 Rob Myers
+// License: GNU General Public License Version 3 or later
 
-var fs = require("fs");
-var glob = require("glob");
-var path = require("path");
+var csv = require("csv");
+var MongoClient = require('mongodb').MongoClient;
 
-console.log("artwork.id\tartwork.title\tmovement.era.id\tmovement.era.name\tmovement.id\tmovement.name");
+var columns = ["artwork.id", "artwork.title", "movement.era.id",
+               "movement.era.name", "movement.id", "movement.name"];
 
-glob("collection/artworks/**/*.json", function (err, files) {
-  if(! err) {
-    files.forEach(function(file) {
-      var json = fs.readFileSync(file).toString();
-      var artwork = JSON.parse(json);
-      for (var i = 0; i < artwork.movementCount; i++) {
-        var movement = artwork.movements[i];
-        console.log([artwork.id, artwork.title,
-                     movement.era.id, movement.era.name,
-                     movement.id, movement.name].join("\t"));
-      }
-    });
-  }
+
+MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
+  if(err) { throw err; }
+  var rows = [];
+  db.collection('artworks').find().each(function(err, artwork) {
+    if(err) { throw err; }
+    if(artwork === null) {
+      db.close();
+      csv().from.array(rows).to.stream(process.stdout,
+                                       {end: false,
+                                        columns: columns});
+      return;
+    }
+    if(artwork.movementCount) {
+      artwork.movements.forEach(function(movement) {
+        rows.push([artwork.id, artwork.title,
+                   movement.era.id, movement.era.name,
+                   movement.id, movement.name]);
+      });
+    }
+  });
 });
+
