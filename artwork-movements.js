@@ -4,8 +4,9 @@
 var csv = require("csv");
 var MongoClient = require('mongodb').MongoClient;
 
-var columns = ["artwork.id", "artwork.title", "movement.era.id",
-               "movement.era.name", "movement.id", "movement.name"];
+var columns = ["artwork.id", "artwork.title", "artwork.dateText",
+               "movement.era.id", "movement.era.name", "movement.id",
+               "movement.name"];
 
 
 MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
@@ -22,11 +23,10 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
     }
     if(artwork.movementCount) {
       artwork.movements.forEach(function(movement) {
-        rows.push([artwork.id, artwork.title,
+        rows.push([artwork.id, artwork.title, artwork.dateText,
                    movement.era.id, movement.era.name,
                    movement.id, movement.name]);
       });
     }
   });
 });
-

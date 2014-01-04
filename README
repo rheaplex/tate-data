@@ -1,15 +1,23 @@
 A simple set of scripts to help explore Tate's collection dataset.
 
+
 * Licensing
 
-Code is GPLv3+, data is CC0.
+Code is GPLv3+, data is CC0 with the exception of location data derived from OpenStreetMap which is ODbL. As a result the following link covers artist-locations.csv only:
+
+http://www.openstreetmap.org/copyright
+
 
 * Prerequisites
 
-This project requires mongodb, node.js and the node "mongodb" and "csv libraries.
+This project requires MongoDB, node.js and the following node libraries:
 
-npm install mongodb
 npm install csv
+npm install mongodb
+npm install node-geocoder
+npm install sentiment
+npm install sleep
+
 
 * Importing The Tate Collection Data Into MongoDB
 
@@ -21,7 +29,7 @@ either directly into this folder, or elsewhere and link it in as "collection":
 
 ln -s ../../path/to/collection
 
-Git will ignore it.
+Git will ignore the collection directory.
 
 To import the records into MongoDB you have to feed records in one per line.
 Like this:
@@ -31,6 +39,7 @@ find collection/artworks -name *.json -exec perl -p -e 's/\n/ /' '{}' \; -exec e
 
 Note that this will delete any existing data in these collections.
 
+
 * Usage
 
 Install the prerequisites, Import the Tate data into MongoDB, then type:
@@ -38,6 +47,12 @@ Install the prerequisites, Import the Tate data into MongoDB, then type:
 make
 
 This will generate any csv files that don't already exist.
+
+Building the location database takes some time and is error probe. You may need to retry several times before this completes. Progress information and errors are output to stderr. But it's worth running:
+
+node artist-locations.js
+
+before running make, or renaming artist-locations.js to a non-.js extension so it isn't run by make. Geolocations are stored in the database, so this is a one-time hit unless .
 
 If you need to remake them after updating the MongoDB data, type:
 

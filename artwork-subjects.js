@@ -4,8 +4,10 @@
 var csv = require("csv");
 var MongoClient = require('mongodb').MongoClient;
 
-var columns = ["artwork.id", "artwork.title", "subject.id", "subject.name",
-               "child.id", "child.name", "childchild.id", "chilchild.name"];
+var columns = ["artwork.id", "artwork.title", "artwork.dateText",
+               "subject.id", "subject.name",
+               "child.id", "child.name",
+               "childchild.id", "chilchild.name"];
 
 MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
   if(err) { throw err; }
@@ -23,7 +25,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
       artwork.subjects.children.forEach(function(subject) {
         subject.children.forEach(function(child) {
           child.children.forEach(function(childchild) {
-            rows.push([artwork.id, artwork.title,
+            rows.push([artwork.id, artwork.title, artwork.dateText,
                        subject.id, subject.name,
                        child.id, child.name,
                        childchild.id, childchild.name]);
@@ -33,5 +35,3 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
     }
   });
 });
-
-
