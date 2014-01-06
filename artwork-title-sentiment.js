@@ -27,7 +27,8 @@ var score_artwork = function (artwork, rows) {
     if(artwork_count == 0) {
       csv().from.array(rows).to.stream(process.stdout,
                                        {end: false,
-                                        columns: columns});
+                                        columns: columns,
+                                        header: true});
     }
   });
 };

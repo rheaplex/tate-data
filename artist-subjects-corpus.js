@@ -57,7 +57,8 @@ var dump_artist_subjects = function () {
   });
   csv().from.array(rows).to.stream(process.stdout,
                                    {end: false,
-                                    columns: columns});
+                                    columns: columns,
+                                    header: true});
 };
 
 MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {

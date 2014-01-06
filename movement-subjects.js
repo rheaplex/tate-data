@@ -5,7 +5,7 @@ var csv = require("csv");
 var MongoClient = require('mongodb').MongoClient;
 
 var columns = ["movement.id", "movement.name", "era.id", "era.name",
-               "artwork.id", "artwork.title", 
+               "artwork.id", "artwork.title",
                "subject.id", "subject.name", "child.id", "child.name",
                "childchild.id", "chilchild.name"];
 
@@ -18,7 +18,8 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
       db.close();
       csv().from.array(rows).to.stream(process.stdout,
                                        {end: false,
-                                        columns: columns});
+                                        columns: columns,
+                                        header: true});
       return;
     }
     if(artwork.movementCount && artwork.subjectCount) {
@@ -39,4 +40,3 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
     }
   });
 });
-                                 

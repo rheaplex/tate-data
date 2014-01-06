@@ -44,8 +44,9 @@ var write_csv = function (db) {
     if(locations === null) {
       db.close();
       csv().from.array(rows).to.stream(process.stdout,
-                                       {end: false,
-                                        columns: columns});
+                                       {columns: columns,
+                                        end: false,
+                                        header: true});
       return;
     }
 

@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 var columns = ["artist.id", "artist.name", "artist.gender",
                "artist.birthDate", "artist.deathDate",
-               "artwork.id", "artwork.title", 
+               "artwork.id", "artwork.title",
                "subject.id", "subject.name", "child.id", "child.name",
                "childchild.id", "chilchild.name"];
 
@@ -19,13 +19,14 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
       db.close();
       csv().from.array(rows).to.stream(process.stdout,
                                        {end: false,
-                                        columns: columns});
+                                        columns: columns,
+                                        header: true});
       return;
     }
     // Births and deaths can have locations but not dates
-    var birthDate = ("birth" in artist && "time" in artist.birth) ? 
+    var birthDate = ("birth" in artist && "time" in artist.birth) ?
         artist.birth.time.startYear : undefined;
-    var deathDate = ("death" in artist && "time" in artist.death) ? 
+    var deathDate = ("death" in artist && "time" in artist.death) ?
         artist.death.time.startYear : undefined;
     db.collection('artworks').find({
       "contributors.id":artist.id}).toArray(function(err, artworks) {

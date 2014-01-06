@@ -34,7 +34,8 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
       db.close();
       csv().from.array(rows).to.stream(process.stdout,
                                        {end: false,
-                                        columns: columns});
+                                        columns: columns,
+                                        header: true});
       return;
     }
     if(artwork.subjectCount > 0) {
