@@ -13,8 +13,7 @@ var MongoClient = require('mongodb').MongoClient;
 var sentiment = require('sentiment');
 
 var columns = ['artwork.id', 'artwork.title',
-              'afinn_111_score', 'afinn_111_comparative'
-              ];
+              'afinn_111_score', 'afinn_111_comparative'];
 
 var artwork_count;
 

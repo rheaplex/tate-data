@@ -23,15 +23,17 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
                                         header: true});
       return;
     }
-    // Births and deaths can have locations but not dates
-    var birthDate = ("birth" in artist && "time" in artist.birth) ?
-        artist.birth.time.startYear : undefined;
-    var deathDate = ("death" in artist && "time" in artist.death) ?
-        artist.death.time.startYear : undefined;
-    artist.movements.forEach(function(movement) {
-      rows.push([artist.id, artist.fc,
-                 movement.era.id, movement.era.name,
-                 movement.id, movement.name]);
-    });
+    if (artist.movements.length > 0) {
+      var movement = artist.movements[0];
+      for (var i = 1; i < artist.movements.length; i++) {
+        var next_movement = artist.movements[i];
+        rows.push([artist.id, artist.fc,
+                   movement.era.id, movement.era.name,
+                   movement.id, movement.name,
+                   next_movement.era.id, next_movement.era.name,
+                   next_movement.id, next_movement.name]);
+        movement = next_movement;
+      }
+    }
   });
 });

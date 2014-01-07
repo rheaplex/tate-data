@@ -58,3 +58,10 @@ If you need to remake them after updating the MongoDB data, type:
 
 make clean
 make
+
+
+* Naming
+
+File names use singular or plural names to indicate whether a property can be multiple.
+
+The "subject" entries for artworks have been named "category", "subcategory" and "subject". These are child, child/child and child/child/child in the json for an artwork respectively. Naming the most specific element of a subject, that is an entity several levels down from an array names "Subjects", as "subject" may be confusing in terms of describing the data structure but is clearer in terms of describing the conceptual hierarchy.

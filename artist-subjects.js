@@ -7,8 +7,9 @@ var MongoClient = require('mongodb').MongoClient;
 var columns = ["artist.id", "artist.name", "artist.gender",
                "artist.birthDate", "artist.deathDate",
                "artwork.id", "artwork.title",
-               "subject.id", "subject.name", "child.id", "child.name",
-               "childchild.id", "chilchild.name"];
+               "category.id", "category.name",
+               "subcategory.id", "subcategory.name",
+               "subject.id", "subject.name"];
 
 MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
   if(err) { throw err; }

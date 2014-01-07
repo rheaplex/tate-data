@@ -4,7 +4,8 @@
 var csv = require("csv");
 var MongoClient = require('mongodb').MongoClient;
 
-var columns = ["artist.id", "artist.fc", "artist.birthDate", "artist.deathDate",
+var columns = ["artist.id", "artist.fc", "artist.gender",
+               "artist.birthDate", "artist.deathDate",
                "movement.era.id", "movement.era.name",
                "movement.id", "movement.name"];
 
@@ -30,7 +31,8 @@ MongoClient.connect('mongodb://127.0.0.1:27017/tate', function(err, db) {
       var fromMovement = artist.movements[0];
       for (var i = 1; i < artist.movements.length; i++) {
         var toMovement = artist.movements[i];
-        rows.push([artist.id, artist.fc, birthDate, deathDate,
+        rows.push([artist.id, artist.fc, artist.gender,
+                   birthDate, deathDate,
                    fromMovement.era.id, fromMovement.era.name,
                    fromMovement.id, fromMovement.name,
                    toMovement.era.id, toMovement.era.name,
